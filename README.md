@@ -25,24 +25,26 @@
 
 ## Quickstart
 
-    from apistar-autoapp import AutoApp
+```python
+from apistar-autoapp import AutoApp
 
-    async def welcome() -> dict:
-        return {'msg': 'hello'}
-
-
-    routes = [
-        Route('/', 'GET', handler=welcome, name='welcome'),
-    ]
-
-    app = AutoApp(routes=routes)
-
-    def main():
-        app.serve('127.0.0.1', 8000, debug=True)
+async def welcome() -> dict:
+    return {'msg': 'hello'}
 
 
-    if __name__ == '__main__':
-        main()
+routes = [
+    Route('/', 'GET', handler=welcome, name='welcome'),
+]
+
+app = AutoApp(routes=routes)
+
+def main():
+    app.serve('127.0.0.1', 8000, debug=True)
+
+
+if __name__ == '__main__':
+    main()
+```
 
 
 ## Docs
