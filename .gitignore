@@ -2,3 +2,5 @@
 *.pyo
 *.pyc
 test-results
+.coverage
+.pytest_cache/
