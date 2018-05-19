@@ -34,6 +34,7 @@ jobs:
             . venv/bin/activate
             pip install pipenv
             pipenv install
+            pipenv install pytest
 
       - save_cache:
           paths:
@@ -45,10 +46,10 @@ jobs:
       # other common Python testing frameworks include pytest and nose
       # https://pytest.org
       # https://nose.readthedocs.io
-      # - run:
-      #     name: run tests
-      #     command: |
-      #       . venv/bin/activate
+      - run:
+          name: run tests
+          command: |
+            scripts/test
       #       python manage.py test
 
       # - store_artifacts:
