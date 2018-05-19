@@ -2,7 +2,7 @@ import os
 import inspect
 import logging
 from importlib import import_module
-from apistar import Include, App as AS_App, AsyncApp as AS_AsyncApp
+from apistar import Include, App, ASyncApp
 
 
 logger = logging.getLogger('autoapp')
@@ -213,9 +213,9 @@ def app_args(project_dir: str = None,
     return kwargs
 
 
-def App(**kwargs):
-    return AS_App(**app_args(**kwargs))
+def AutoApp(**kwargs):
+    return App(**app_args(**kwargs))
 
 
-def AsyncApp(**kwargs):
-    return AS_AsyncApp(**app_args(**kwargs))
+def AutoASyncApp(**kwargs):
+    return ASyncApp(**app_args(**kwargs))

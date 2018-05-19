@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 apistar = "*"
+whitenoise = "*"
+aiofiles = "*"
 
 [dev-packages]
 neovim = "*"

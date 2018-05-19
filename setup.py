@@ -23,7 +23,9 @@ setup(
     license='Apache',
     packages='apistar_autoapp',
     install_requires=[
-        'apistar'
+        'apistar',
+        'whitenoise',
+        'aiofiles',
     ],
     classifiers=[
         'Environment :: Web Environment',
