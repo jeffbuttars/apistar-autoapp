@@ -49,7 +49,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            bash scripts/test
+            bash scripts/tests
 
       - store_artifacts:
           path: test-reports
