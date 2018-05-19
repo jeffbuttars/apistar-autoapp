@@ -34,7 +34,7 @@ jobs:
             . venv/bin/activate
             pip install pipenv
             pipenv install
-            pipenv install pytest
+            pipenv install pytest pytest-cov
 
       - save_cache:
           paths:
