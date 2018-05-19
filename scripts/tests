@@ -10,4 +10,5 @@ fi
 
 set -x
 
-PYTHONPATH=. ${PREFIX}pytest --ignore venv --ignore .venv --cov=apistar-autoapp --cov=tests --cov-report=term-missing ${@}
+PYTHONPATH=. ${PREFIX}pytest --ignore venv --ignore .venv --cov=apistar-autoapp --cov=tests \
+    --cov-report xml:test-results/coverage/coverage.xml --cov-report html:test-results/coverage --cov-report=term-missing --junit-xml=test-results/results.xml ${@}
