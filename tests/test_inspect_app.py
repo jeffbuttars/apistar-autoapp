@@ -13,11 +13,7 @@ def test_inspect_app_top():
     with pytest.raises(ModuleNotFoundError):
         inspect_app(tuple())
 
-    #  print('test_inspect_app_top', os.getcwd())
-    #  print('test_inspect_app_top', sys.path)
-
     importlib.import_module('tests.app')
-
 
     res = inspect_app(('tests',))
     assert res
