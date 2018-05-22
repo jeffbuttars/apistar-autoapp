@@ -21,6 +21,7 @@ setup(
     description='Automatically import APIStar sub apps',
     url='git@github.com:jeffbuttars/apistar-autoapp',
     author='Jeff Buttars',
+    author_email='jeff@jeffbuttars.com',
     license='Apache',
     packages=['apistar_autoapp'],
     install_requires=[
