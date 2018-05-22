@@ -1,4 +1,5 @@
 import pytest
+
 from apistar_autoapp.autoapp import inspect_app
 
 

@@ -1,5 +1,5 @@
-import os
 import inspect
+import os
 
 
 def cur_dir():

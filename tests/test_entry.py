@@ -1,4 +1,5 @@
 from apistar import App, ASyncApp
+
 from apistar_autoapp import AutoApp, AutoASyncApp
 
 

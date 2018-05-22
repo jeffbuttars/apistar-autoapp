@@ -1,6 +1,8 @@
 import os
-from .tools import cur_dir
+
 from apistar_autoapp.autoapp import find_apps
+
+from .tools import cur_dir
 
 
 def test_find_apps_top():
