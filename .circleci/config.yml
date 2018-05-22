@@ -31,8 +31,7 @@ jobs:
           name: install dependencies
           command: |
             scripts/setup
-            . venv/bin/activate
-            pipenv install --dev
+            ./venv/bin/pipenv install --dev
 
       - save_cache:
           paths:
