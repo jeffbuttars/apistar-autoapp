@@ -37,7 +37,7 @@ setup(
     name='apistar-autoapp',
     version=version,
     description='Automatically import APIStar sub apps',
-    url='git@github.com:jeffbuttars/apistar-autoapp',
+    url='https://github.com/jeffbuttars/apistar-autoapp',
     author='Jeff Buttars',
     author_email='jeff@jeffbuttars.com',
     license='Apache License 2.0',
@@ -50,7 +50,7 @@ setup(
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: Apache License',
+        'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
         'Programming Language :: Python :: 3',
