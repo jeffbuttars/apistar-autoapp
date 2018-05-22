@@ -1,5 +1,6 @@
 import os
 import re
+
 from setuptools import setup
 
 
@@ -18,7 +19,7 @@ setup(
     name='apistar-autoapp',
     version=version,
     description='Automatically import APIStar sub apps',
-    url='git@github.com:jeffbuttars/apistart-autoapp',
+    url='git@github.com:jeffbuttars/apistar-autoapp',
     author='Jeff Buttars',
     license='Apache',
     packages='apistar_autoapp',
