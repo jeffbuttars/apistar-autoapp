@@ -5,7 +5,7 @@ from importlib import import_module
 from apistar import Include, App, ASyncApp
 
 
-logger = logging.getLogger('autoapp')
+logger = logging.getLogger('apistar-autoapp')
 _tab = '  '
 
 
@@ -93,22 +93,26 @@ def find_apps(app_dir: str) -> list:
     return apps
 
 
-def inspect_app(app_path: tuple) -> dict:
+def inspect_app(app_mod, app_path: tuple):
+    return {
+        'routes': getattr(app_mod, 'routes', []),
+        'components': getattr(app_mod, 'components', []),
+        'template_dir': getattr(app_mod, 'template_dir', []),
+        'packages': getattr(app_mod, 'packages', []),
+        'event_hooks': getattr(app_mod, 'event_hooks', []),
+        'apps': getattr(app_mod, 'apps', []),
+        'app_path': app_path,
+    }
+
+
+def inspect_app_path(app_path: tuple) -> dict:
     """
     Return the attributes need for the App() instance from this app's app.py
     """
     path_str = '.'.join(app_path + ('app',))
     app_mod = import_module(path_str)
 
-    return {
-        'routes': getattr(app_mod, 'routes', []),
-        'components': getattr(app_mod, 'components', []),
-        'template_dir': getattr(app_mod, 'template_dir', []),
-        'static_dir': getattr(app_mod, 'static_dir', ''),
-        'packages': getattr(app_mod, 'packages', []),
-        'event_hooks': getattr(app_mod, 'event_hooks', []),
-        'app_path': app_path,
-    }
+    return inspect_app(app_mod, app_path)
 
 
 def process_app_routes(app):
@@ -144,7 +148,7 @@ def find(cur_dir: str, parent_app: tuple = None):
 
     for app_name in sub_apps:
         app_path = parent_app + (app_name,)
-        cur_app = inspect_app(app_path)
+        cur_app = inspect_app_path(app_path)
 
         # Decend into each found app
         sub_res = find(os.path.join(cur_dir, app_name), app_path)
@@ -175,6 +179,7 @@ def prioritize(priority_apps, reg_apps):
 def app_args(project_dir: str = None,
              priority_apps: list = None,
              print_results: bool = False,
+             apps: list = None,
              **kwargs) -> dict:
 
     sub_routes = []
