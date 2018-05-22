@@ -30,15 +30,12 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install pipenv
-            pipenv install
-            pipenv install pytest pytest-cov
+            scripts/setup
+            ./.venv/bin/pipenv install --dev
 
       - save_cache:
           paths:
-            - ./venv
+            - ./.venv
           key: cache-{{ checksum "Pipfile.lock" }}
 
       # run tests!
@@ -47,9 +44,11 @@ jobs:
       # https://pytest.org
       # https://nose.readthedocs.io
       - run:
+          name: run lint
+          command: bash scripts/lint
+      - run:
           name: run tests
-          command: |
-            bash scripts/tests
+          command: bash scripts/tests
 
       - store_test_results:
           path: test-results

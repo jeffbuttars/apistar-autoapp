@@ -1,6 +1,5 @@
 from apistar_autoapp import autoapp
 
-
 app1 = {
     'app_path': ('v1',)
 }

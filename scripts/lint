@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+export PREFIX=""
+if [ -d 'venv' ] ; then
+    export PREFIX="venv/bin/"
+fi
+if [ -d '.venv' ] ; then
+    export PREFIX=".venv/bin/"
+fi
+
+set -x
+
+${PREFIX}flake8 apistar-autoapp tests
+${PREFIX}isort apistar-autoapp tests --recursive --check-only

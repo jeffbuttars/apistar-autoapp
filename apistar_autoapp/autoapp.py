@@ -1,9 +1,9 @@
-import os
 import inspect
 import logging
+import os
 from importlib import import_module
-from apistar import Include, App, ASyncApp
 
+from apistar import App, ASyncApp, Include
 
 logger = logging.getLogger('autoapp')
 _tab = '  '

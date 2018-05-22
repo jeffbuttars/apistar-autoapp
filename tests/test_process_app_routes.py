@@ -1,4 +1,5 @@
 from apistar import Route
+
 from apistar_autoapp.autoapp import process_app_routes
 
 
