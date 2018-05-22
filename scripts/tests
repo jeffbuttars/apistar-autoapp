@@ -11,7 +11,7 @@ fi
 set -x
 
 PYTHONPATH=. ${PREFIX}pytest --ignore venv --ignore .venv \
-    --cov=apistar-autoapp \
+    --cov=apistar_autoapp \
     --cov=tests \
     --cov-report xml:test-results/coverage/coverage.xml \
     --cov-report html:test-results/coverage \
