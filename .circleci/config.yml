@@ -31,11 +31,11 @@ jobs:
           name: install dependencies
           command: |
             scripts/setup
-            ./venv/bin/pipenv install --dev
+            ./.venv/bin/pipenv install --dev
 
       - save_cache:
           paths:
-            - ./venv
+            - ./.venv
           key: cache-{{ checksum "Pipfile.lock" }}
 
       # run tests!
