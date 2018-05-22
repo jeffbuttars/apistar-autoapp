@@ -1,12 +1,6 @@
 import os
-import inspect
+from .tools import cur_dir
 from apistar_autoapp.autoapp import find_apps
-
-
-def cur_dir():
-    frame = inspect.stack()[0]
-    module = inspect.getmodule(frame[0])
-    return os.path.dirname(os.path.realpath(module.__file__))
 
 
 def test_find_apps_top():

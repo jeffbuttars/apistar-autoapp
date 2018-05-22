@@ -1,24 +1,19 @@
 #!/bin/sh -e
 
-THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PKG_DIR="$(dirname $THIS_DIR)"
-
 export PREFIX=""
 if [ -d 'venv' ] ; then
-    export PREFIX="$PKG_DIR/venv/bin/"
+    export PREFIX="venv/bin/"
 fi
 if [ -d '.venv' ] ; then
-    export PREFIX="$PKG_DIR/.venv/bin/"
+    export PREFIX=".venv/bin/"
 fi
 
 set -x
 
-# cd $THIS_DIR
-
-export PYTHONPATH="."
-${PREFIX}pytest --ignore venv --ignore .venv --cov=apistar-autoapp --cov=tests \
+PYTHONPATH=. ${PREFIX}pytest --ignore venv --ignore .venv \
+    --cov=apistar-autoapp \
+    --cov=tests \
     --cov-report xml:test-results/coverage/coverage.xml \
     --cov-report html:test-results/coverage \
     --cov-report=term-missing \
-    --junit-xml=test-results/results.xml \
-    ${@}
+    --junit-xml=test-results/results.xml ${@}
