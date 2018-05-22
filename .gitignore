@@ -4,3 +4,4 @@
 test-results
 .coverage
 .pytest_cache/
+*.egg-info

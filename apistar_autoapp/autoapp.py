@@ -182,7 +182,7 @@ def app_args(project_dir: str = None,
     sub_hooks = []
 
     if not project_dir:
-        frame = inspect.stack()[1]
+        frame = inspect.stack()[2]
         module = inspect.getmodule(frame[0])
         project_dir = module.__file__
 
