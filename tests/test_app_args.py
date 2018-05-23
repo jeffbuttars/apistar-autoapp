@@ -1,10 +1,8 @@
 from apistar_autoapp.autoapp import app_args
 
-from .tools import cur_dir
-
 
 def test_app_args_empty():
-    res = app_args(cur_dir())
+    res = app_args()
 
     assert res
     assert res.get('components') == []
@@ -14,5 +12,5 @@ def test_app_args_empty():
 
 def test_app_args_print():
     # Make sure it doesn't explode
-    res = app_args(cur_dir(), print_results=True)
+    res = app_args(print_results=True)
     assert res

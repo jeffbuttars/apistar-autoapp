@@ -1,29 +1,20 @@
 import os
 
-from apistar_autoapp.autoapp import find_apps
+from apistar_autoapp import autoapp
 
-from .tools import cur_dir
+cur_dir = os.path.realpath(os.path.dirname(__file__))
 
 
-def test_find_apps_top():
-    res = find_apps(cur_dir())
+def test_find_apps():
+    res = autoapp.find_apps(cur_dir)
     assert res
-    assert set(res) == set(('v1', 'v2'))
+    assert len(res) == 11
 
-
-def test_find_apps_v1():
-    res = find_apps(os.path.join(cur_dir(), 'v1'))
-    assert res
-    assert set(res) == set(('epone', 'eptwo', 'epthree', 'deep'))
-
-
-def test_find_apps_v2():
-    res = find_apps(os.path.join(cur_dir(), 'v2'))
-    assert res
-    assert set(res) == set(('epone', 'eptwo', 'epthree'))
-
-
-def test_find_apps_v1_deep():
-    res = find_apps(os.path.join(cur_dir(), 'v1', 'deep'))
-    assert res
-    assert set(res) == set(('one', 'two'))
+    for app in res:
+        assert app.get('components') == []
+        assert app.get('event_hooks') == []
+        assert app.get('packages') == []
+        assert app.get('routes') == []
+        assert app.get('template_dir') == []
+        assert app.get('app_path')
+        assert len(app.get('app_path')) > 0

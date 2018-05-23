@@ -1,14 +1,9 @@
-from apistar_autoapp.autoapp import (
-    app_args, print_include, print_route,
-    print_routes, print_components,
-    AutoApp, AutoASyncApp
-)
+from apistar_autoapp.autoapp import AutoApp, AutoASyncApp, app_args
+from apistar_autoapp.printer import Printer
 
-
-__version__ = '0.5.0'
+__version__ = '0.5.2'
 
 
 __all__ = [
-    'app_args', 'print_include', 'print_route', 'print_routes', 'print_components',
-    'AutoApp', 'AutoASyncApp'
+    'app_args', 'AutoApp', 'AutoASyncApp', 'Printer'
 ]
