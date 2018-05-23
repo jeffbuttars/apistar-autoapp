@@ -167,7 +167,7 @@ ex:
         ...
 
 
-#### omponents
+#### components
 Prints a list of [components](https://docs.apistar.com/api-guide/dependency-injection/) in the form:
 
 
