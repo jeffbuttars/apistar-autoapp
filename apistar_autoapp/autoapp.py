@@ -61,7 +61,7 @@ def print_route(route, printer, parent_url: str = None, level: int = 0):
 
 
 def print_routes(routes, printer=None):
-    printer = printer or logger.debug
+    printer = printer or print
 
     printer('\nRoutes:')
 
@@ -73,11 +73,37 @@ def print_routes(routes, printer=None):
 
 
 def print_components(components, printer=None):
-    printer = printer or logger.debug
+    printer = printer or print
 
     printer('\nComponents:')
     for comp in components:
         printer('\t{}'.format(comp.__class__.__name__))
+
+
+def find_caller_dir():
+    """
+    This does a little work beyond relying on the caller always
+    being at a certain point in the call stack.
+    The algorithm is as such:
+        * prefer the first module who's filename is app.py
+        * otherwise is no app.py is found, use the first module that is
+          not this module
+    """
+    closest_frame = None
+    this_file = os.path.basename(__file__)
+
+    for frame in inspect.stack():
+        if os.path.basename(frame.filename) == 'app.py':
+            return os.path.dirname(frame.filename)
+
+        if not closest_frame and os.path.basename(frame.filename) != this_file:
+            closest_frame = frame
+
+    # Didn't find an `app.py`, return the first thing not this.
+    if closest_frame:
+        return os.path.dirname(closest_frame.filename)
+
+    raise ImportError('Unable to find calling module')
 
 
 def find_apps(app_dir: str) -> list:
@@ -181,10 +207,7 @@ def app_args(project_dir: str = None,
     sub_comps = []
     sub_hooks = []
 
-    if not project_dir:
-        frame = inspect.stack()[2]
-        module = inspect.getmodule(frame[0])
-        project_dir = module.__file__
+    project_dir = project_dir or find_caller_dir()
 
     # Find all the sub apps and collect their info then prioritize them
     sub_apps = prioritize(
@@ -206,8 +229,8 @@ def app_args(project_dir: str = None,
     kwargs['routes'] = kwargs.get('routes', []) + sub_routes
 
     if print_results:
-        print_components(kwargs['components'], printer=print)
-        print_routes(kwargs['routes'], printer=print)
+        print_components(kwargs['components'])
+        print_routes(kwargs['routes'])
         print('')
 
     return kwargs
