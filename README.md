@@ -27,10 +27,10 @@ Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with su
     * [AutoASyncApp](#autoasyncapp)
     * [app_args](#app_args)
     * [Print Helper](#print-helper)
-        * [print_include](#print_include)
-        * [print_route](#print_route)
-        * [print_routes](#print_routes)
-        * [print_components](#print_components)
+        * [include](#include)
+        * [route](#route)
+        * [routes](#routes)
+        * [components](#components)
 
 
 ## Features
