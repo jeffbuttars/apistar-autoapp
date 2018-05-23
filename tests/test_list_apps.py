@@ -2,7 +2,6 @@ import os
 
 from apistar_autoapp.autoapp import list_apps
 
-
 cur_dir = os.path.realpath(os.path.dirname(__file__))
 
 

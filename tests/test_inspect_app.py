@@ -5,7 +5,7 @@ from apistar_autoapp.autoapp import inspect_app
 
 def test_inspect_app_top():
     with pytest.raises(TypeError):
-        inspect_app()
+        res = inspect_app()
 
     res = inspect_app(tuple())
     assert res
@@ -37,6 +37,7 @@ def test_inspect_app_v2():
     assert res['packages'] == []
     assert res['event_hooks'] == []
     assert res['app_path'] == ('tests', 'v2')
+
 
 def test_inspect_app_v1_subs():
     res = inspect_app(('tests', 'v1', 'epone'))
