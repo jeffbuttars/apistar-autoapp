@@ -26,7 +26,7 @@ Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with su
     * [AutoApp](#autoapp)
     * [AutoASyncApp](#autoasyncapp)
     * [app_args](#app_args)
-    * [Print Helpers](#print-helpers)
+    * [Print Helper](#print-helper)
         * [print_include](#print_include)
         * [print_route](#print_route)
         * [print_routes](#print_routes)
@@ -104,9 +104,28 @@ or for [Pipenv](https://docs.pipenv.org/) users
              print_results: bool = False,
              **kwargs) -> dict:
 
-### Print helpers
+### Print helper
 
-#### print_include
+There are some printing helpers for internal use by apistar-autoapp but are exposed for use by other
+modules. There is a `Printer` class the uses `print` by default but can use any function that
+accepts a string in it's place.
+
+```python
+from apistar_autoapp.printer import Printer
+
+pr = Printer()
+
+# Or if you want to your own print function, like a logger:
+pr = Printer(printer=logger.info)
+
+...
+
+# to print out a list of routes:
+pr.routes(routes)
+```
+
+
+#### include
 Prints an [Include](https://docs.apistar.com/api-guide/routing/#routing-in-larger-projects) instance to the console as well as all of it's [Routes](https://docs.apistar.com/api-guide/routing/) in the form:
 
     Include: <url> <name>
@@ -117,7 +136,7 @@ Include: /v2/welcome v2:welcome
     Route: GET /, welcome
            app.welcome() -> dict:
 
-#### print_route
+#### route
 Prints a [Route](https://docs.apistar.com/api-guide/routing/) instance to the console in the form:
 
     Route: <method> <url>, <name>
@@ -127,7 +146,7 @@ ex:
     Route: GET /, welcome
            app.welcome() -> dict:
 
-#### print_routes
+#### routes
 
 Prints a list of [Routes](https://docs.apistar.com/api-guide/routing/) and [Includes](https://docs.apistar.com/api-guide/routing/#routing-in-larger-projects) using `print_route` and `print_include` in the form:
 
@@ -148,7 +167,7 @@ ex:
         ...
 
 
-#### print_components
+#### omponents
 Prints a list of [components](https://docs.apistar.com/api-guide/dependency-injection/) in the form:
 
 
