@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TEST_DIR=$(dirname $THIS_DIR)/tests
+
 export PREFIX=""
 if [ -d 'venv' ] ; then
     export PREFIX="venv/bin/"
@@ -10,7 +13,7 @@ fi
 
 set -x
 
-PYTHONPATH=. ${PREFIX}pytest --ignore venv --ignore .venv \
+PYTHONPATH=$TEST_DIR ${PREFIX}pytest --ignore venv --ignore .venv \
     --cov=apistar_autoapp \
     --cov-report xml:test-results/coverage/coverage.xml \
     --cov-report html:test-results/coverage \

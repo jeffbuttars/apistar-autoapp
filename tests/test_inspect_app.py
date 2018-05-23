@@ -7,17 +7,14 @@ def test_inspect_app_top():
     with pytest.raises(TypeError):
         inspect_app()
 
-    with pytest.raises(ModuleNotFoundError):
-        inspect_app(tuple())
-
-    res = inspect_app(('tests',))
+    res = inspect_app(tuple())
     assert res
     assert res['routes'] == []
     assert res['components'] == []
     assert res['template_dir'] == []
     assert res['packages'] == []
     assert res['event_hooks'] == []
-    assert res['app_path'] == ('tests',)
+    assert res['app_path'] == tuple()
 
 
 def test_inspect_app_v1():
