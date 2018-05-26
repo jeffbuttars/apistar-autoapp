@@ -22,7 +22,7 @@ Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with su
 * [Features](#features)
 * [Quickstart](#quickstart)
 * [Install](#install)
-* [Ananomy](#ananomy)
+* [Anatomy](#anatomy)
     * [Example project structure](#example-project-structure)
 * [Docs](#docs)
     * [AutoApp](#autoapp)
@@ -35,6 +35,7 @@ Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with su
         * [components](#components)
 * [TODO](#todo)
 
+---
 
 ## Features
 
@@ -49,6 +50,7 @@ Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with su
   in the [event_hooks](https://docs.apistar.com/api-guide/event-hooks/) and [component](https://docs.apistar.com/api-guide/dependency-injection/) lists as well as control import order.
 
 
+---
 
 ## Quickstart
 
@@ -72,6 +74,8 @@ if __name__ == '__main__':
     app.serve('127.0.0.1', 8000, debug=True)
 ```
 
+---
+
 ## Install
 
     pip install apistar-autoapp
@@ -81,7 +85,9 @@ or for [Pipenv](https://docs.pipenv.org/) users
     pipenv install apistar-autoapp
 
 
-## Ananomy
+---
+
+## Anatomy
 
 For a package to be considered an 'app' it must contain a file named `app.py`. The
 `app.py` file can be empty. It's in the `app.py` file where you expose what your app
@@ -158,6 +164,8 @@ And if `endpointOne` had another route for the URL `/users`, you'd then have:
     /v1/endpointOne
     /v1/endpointOne/users
     /v1/endpointTwo
+
+---
 
 ## Docs
 
@@ -299,6 +307,7 @@ ex:
             WebSocketComponent
                     resolve(self, scope: ASGIScope, send: ASGISend, receive: ASGIReceive, app: App) -> WebSocket:
 
+---
 
 ## TODO
 
