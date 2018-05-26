@@ -9,6 +9,9 @@
 
 <p align='center'>
     <img alt='CircleCI Test Status' src='https://circleci.com/gh/jeffbuttars/apistar-autoapp.svg?style=shield&circle-token=dab68c7748dee073e7176628ab35652fd5c7cae6' />
+    <a href="https://badge.fury.io/py/apistar-autoapp">
+    <img src="https://badge.fury.io/py/apistar-autoapp.svg" alt="PyPI version" height="18">
+    </a>
 </p>
 
 
