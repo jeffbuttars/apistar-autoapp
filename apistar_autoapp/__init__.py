@@ -1,7 +1,7 @@
 from apistar_autoapp.autoapp import AutoApp, AutoASyncApp, app_args
 from apistar_autoapp.printer import Printer
 
-__version__ = '0.5.3'
+__version__ = '0.5.4'
 
 
 __all__ = [

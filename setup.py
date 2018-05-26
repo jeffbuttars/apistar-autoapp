@@ -30,17 +30,29 @@ def get_version(package):
     return re.search("__version__ = ['\"]([^'\"]+)['\"]", init_py).group(1)
 
 
+def get_long_description(long_description_file):
+    """
+    Read long description from file.
+    """
+    with open(long_description_file, encoding='utf-8') as f:
+        long_description = f.read()
+
+    return long_description
+
+
 version = get_version('apistar_autoapp')
 
 
 setup(
     name='apistar-autoapp',
     version=version,
-    description='Automatically import APIStar sub apps',
     url='https://github.com/jeffbuttars/apistar-autoapp',
     author='Jeff Buttars',
     author_email='jeff@jeffbuttars.com',
     license='Apache License 2.0',
+    description='Automatically import APIStar sub apps',
+    long_description=get_long_description('README.md'),
+    long_description_content_type='text/markdown',
     packages=['apistar_autoapp'],
     install_requires=[
         'apistar',
