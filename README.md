@@ -22,6 +22,8 @@ Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with su
 * [Features](#features)
 * [Quickstart](#quickstart)
 * [Install](#install)
+* [Ananomy](#ananomy)
+    * [Example project structure](#example-project-structure)
 * [Docs](#docs)
     * [AutoApp](#autoapp)
     * [AutoASyncApp](#autoasyncapp)
@@ -31,15 +33,16 @@ Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with su
         * [route](#route)
         * [routes](#routes)
         * [components](#components)
+* [TODO](#todo)
 
 
 ## Features
 
 
-
-
-* Automatically [Includes routes](https://docs.apistar.com/api-guide/routing/#routing-in-larger-projects) from `app`s creating the appropriate URL based on the
-    filesystem path from the projects root `app.py` file.
+* Automatically build URLs based on your projeccts structure.
+    * Autoapp [Includes routes](https://docs.apistar.com/api-guide/routing/#routing-in-larger-projects)
+        from apps in your project creating the appropriate URL based on the
+        filesystem path from the projects root `app.py` file.
 * Automatically collect [event_hooks](https://docs.apistar.com/api-guide/event-hooks/) and [component](https://docs.apistar.com/api-guide/dependency-injection/) lists from apps and consolidate them
   together to build the [App](https://docs.apistar.com/api-guide/applications/)/[ASyncApp](https://docs.apistar.com/api-guide/applications/) with.
 * Allow an ordered priority list of apps by their path string to control the order of items
@@ -78,6 +81,83 @@ or for [Pipenv](https://docs.pipenv.org/) users
     pipenv install apistar-autoapp
 
 
+## Ananomy
+
+For a package to be considered an 'app' it must contain a file named `app.py`. The
+`app.py` file can be empty. It's in the `app.py` file where you expose what your app
+provides to the [APIStar](https://docs.apistar.com/) configuration. Autoapp will look
+for three attributes on the `app.py` module and if they're found add them to the [APIStar](https://docs.apistar.com/)
+configuration at startup.  
+
+The attributes must be lists and named:
+
+    routes
+    components
+    event_hooks
+
+For example, a simple app that only exposes it's routes could be:
+
+`app.py`:
+
+    from .handlers import routes
+
+Or an app that exposes it's routes, event_hooks and components:
+
+
+`app.py`:
+
+    from .handlers import routes
+    from .components import components
+    from .event_hooks import event_hooks
+
+
+And of course if you have a simple app you can have all of your code in the `app.py` and
+then have module variables defined by your application code.
+
+A simple app:
+
+```python
+from apistar import App, Route
+
+
+def homepage() -> str:
+    return '<html><body><h1>Homepage</h1></body></html>'
+
+
+routes = [
+    Route('/', method='GET', handler=homepage),
+]
+```
+
+### Example project structure
+
+```
+
+project/
+  app.py
+  v1/
+    app.py
+    ...
+    endpointOne/
+      app.py
+      ...
+    endpointTwo/
+      app.py
+      ...
+```
+
+If the `v1/app.py` file is emtpy the each of the endpoint apps exposed a single root, `/`, route the
+route URLs created for the project, via [Includes](https://docs.apistar.com/api-guide/routing/#routing-in-larger-projects)
+would be:
+
+    /v1/endpointOne
+    /v1/endpointTwo
+
+And if `endpointOne` had another route for the URL `/users`, you'd then have:
+
+    /v1/endpointOne
+    /v1/endpointOne/users
+    /v1/endpointTwo
 
 ## Docs
 
@@ -88,8 +168,27 @@ or for [Pipenv](https://docs.pipenv.org/) users
             print_results: bool = False,
             **kwargs) -> App
 
+Parameters:
+
+    (Optional)
+    project_dir: The directory from which apistar-autoapp will look for a project root.
+        This is autodetected if not used and you normally won't use this parameter.
+
+    (Optional)
+    priority_apps: A list of apps, by their import path, that will be imported before all
+      other apps found by apistar-autoapp and imported in the order they are given.
+
+    (Optional)
+    print_results: Print the results of the configuration created by apistar-autoapp to
+      the console.
+
+    kwargs: These are the arguments you'd normally pass to App or ASyncApp. If you pass
+      any of the arguments: routes, components or event_hooks, they will be given precedence
+      and listed before any of the corresponding values created by autoapp.
 
 ### AutoASyncApp
+
+The same as [AutoApp](#autoapp) but creates a project using [ASyncApp](https://docs.apistar.com/api-guide/applications/)
 
     AutoASyncApp(project_dir: str = None,
                  priority_apps: list = None,
@@ -103,6 +202,26 @@ or for [Pipenv](https://docs.pipenv.org/) users
              priority_apps: list = None,
              print_results: bool = False,
              **kwargs) -> dict:
+
+`app_args` is the same as AutoApp and AutoASyncApp except it returns a dictionary of arguments
+that are intended for use by [App](https://docs.apistar.com/api-guide/applications/) or [ASyncApp](https://docs.apistar.com/api-guide/applications/).
+
+In fact AutoApp is just:
+
+```python
+def AutoApp(**kwargs) -> App:
+    return App(**app_args(**kwargs))
+```
+
+So if you want to do something with the data from autoapp before creating your App it's easy:
+
+```python
+kwargs = app_args(...)
+# Do something with kwargs
+# ...
+app = App(**kwargs)
+```
+
 
 ### Print helper
 
@@ -179,3 +298,10 @@ ex:
     Components:
             WebSocketComponent
                     resolve(self, scope: ASGIScope, send: ASGISend, receive: ASGIReceive, app: App) -> WebSocket:
+
+
+## TODO
+
+* Allow any package with an `app.py` file that is importable to be used with Autoapp
+* Add the ability to have a list of excluded apps that will not be imported by Autoapp
+* Add printer for `event_hooks`
