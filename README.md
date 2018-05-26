@@ -4,7 +4,7 @@
 </p>
 
 <p align='center'>
-    <em>Easily manage and compose larger APIStar projects</em>
+    <em>Easily manage and compose API Star projects</em>
 </p>
 
 <p align='center'>
@@ -18,7 +18,7 @@
 ---
 
 
-Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with sub modules using an
+Automatically orchestrates [API Star](https://docs.apistar.com/) projects with sub modules using an
 `app` based pattern.
 
 
@@ -43,7 +43,7 @@ Automatically orchestrates [APIStar](https://docs.apistar.com/) projects with su
 ## Features
 
 
-* Automatically build URLs based on your projeccts structure.
+* Automatically build URLs based on your project's structure.
     * Autoapp [Includes routes](https://docs.apistar.com/api-guide/routing/#routing-in-larger-projects)
         from apps in your project creating the appropriate URL based on the
         filesystem path from the projects root `app.py` file.
@@ -92,10 +92,10 @@ or for [Pipenv](https://docs.pipenv.org/) users
 
 ## Anatomy
 
-For a package to be considered an 'app' it must contain a file named `app.py`. The
+For a package to be considered an 'app' it must contain a file named `app.py` in it's top directory. The
 `app.py` file can be empty. It's in the `app.py` file where you expose what your app
-provides to the [APIStar](https://docs.apistar.com/) configuration. Autoapp will look
-for three attributes on the `app.py` module and if they're found add them to the [APIStar](https://docs.apistar.com/)
+provides to the [API Star](https://docs.apistar.com/) configuration. Autoapp will look
+for three attributes on the `app.py` module and if they're found add them to the [API Star](https://docs.apistar.com/)
 configuration at startup.  
 
 The attributes must be lists and named:
@@ -155,7 +155,7 @@ project/
       ...
 ```
 
-If the `v1/app.py` file is emtpy the each of the endpoint apps exposed a single root, `/`, route the
+If the `v1/app.py` file is empty and each of the `endpoint*` apps exposes a single root URL, `/`, route the
 route URLs created for the project, via [Includes](https://docs.apistar.com/api-guide/routing/#routing-in-larger-projects)
 would be:
 
@@ -217,7 +217,7 @@ The same as [AutoApp](#autoapp) but creates a project using [ASyncApp](https://d
 `app_args` is the same as AutoApp and AutoASyncApp except it returns a dictionary of arguments
 that are intended for use by [App](https://docs.apistar.com/api-guide/applications/) or [ASyncApp](https://docs.apistar.com/api-guide/applications/).
 
-In fact AutoApp is just:
+In fact [AutoApp](#autoapp) is just:
 
 ```python
 def AutoApp(**kwargs) -> App:
