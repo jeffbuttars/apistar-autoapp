@@ -1,6 +1,6 @@
 
 <p align='center'>
-    <H1 align='center'> APIStar AutoApp </H1>
+    <H1 align='center'> API Star AutoApp </H1>
 </p>
 
 <p align='center'>
