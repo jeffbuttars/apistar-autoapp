@@ -1,4 +1,5 @@
 import inspect
+import typing
 import logging
 import os
 from importlib import import_module
@@ -67,7 +68,7 @@ def inspect_app(app_path: tuple) -> dict:
     }
 
 
-def process_app_routes(app):
+def process_app_routes(app, prefix: typing.Union[str, tuple] = None):
     """
     For a given dict of app data figure out if the app is nested
     and if so convert the routes to an Include with the appropriate
@@ -76,16 +77,31 @@ def process_app_routes(app):
 
     routes = app.get('routes')
     app_path = app.get('app_path')
+    inc_name = ''
+    url_prefix = '/'
 
     # If the app has no routes or is not nested (no or empty app_path), do nothing.
     if not routes or not app_path:
         return app
 
+    if isinstance(prefix, tuple):
+        url_prefix = prefix[0]
+        if len(prefix) == 2:
+            inc_name = prefix[1] + ':'
+    elif prefix:
+        url_prefix = prefix
+
+    if url_prefix[-1] != '/':
+        url_prefix += '/'
+
+    inc_name += ':'.join(app_path)
+
     # Build an Include for the set of nested URLs with the matching prefix
     # for the directory structure
+    # If a prefix param is present, pre-pend it as well
     app['routes'] = [Include(
-        '/' + '/'.join(app_path),
-        name=':'.join(app_path),
+        url_prefix + '/'.join(app_path),
+        name=inc_name,
         routes=routes,
     )]
 
@@ -131,6 +147,7 @@ def prioritize(priority_apps, reg_apps):
 def app_args(project_dir: str = None,
              priority_apps: list = None,
              print_results: bool = False,
+             routes_prefix: typing.Union[str, tuple] = None,
              **kwargs) -> dict:
 
     sub_routes = []
@@ -147,7 +164,7 @@ def app_args(project_dir: str = None,
 
     # Collect and process all the sub app data
     for sapp in sub_apps:
-        sapp = process_app_routes(sapp)
+        sapp = process_app_routes(sapp, prefix=routes_prefix)
         sub_routes += sapp.get('routes', [])
         sub_comps += sapp.get('components', [])
         sub_hooks += sapp.get('event_hooks', [])
