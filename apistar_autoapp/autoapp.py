@@ -84,7 +84,6 @@ def process_app_routes(app, prefix: typing.Union[str, tuple] = None):
     if not routes or not app_path:
         return app
 
-    # included_by values take precedence over prefix
     if isinstance(prefix, tuple):
         url_prefix = prefix[0]
         if len(prefix) == 2:
