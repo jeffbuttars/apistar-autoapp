@@ -67,7 +67,7 @@ def inspect_app(app_path: tuple) -> dict:
     }
 
 
-def process_app_routes(app):
+def process_app_routes(app, prefix: str = None, included_by: list = None):
     """
     For a given dict of app data figure out if the app is nested
     and if so convert the routes to an Include with the appropriate
@@ -76,16 +76,31 @@ def process_app_routes(app):
 
     routes = app.get('routes')
     app_path = app.get('app_path')
+    inc_name = ''
 
     # If the app has no routes or is not nested (no or empty app_path), do nothing.
     if not routes or not app_path:
         return app
 
+    # included_by values take precedence over prefix
+    if included_by:
+        prefix = included_by[0]
+        if len(included_by) == 2:
+            inc_name = included_by[1] + ':'
+    else:
+        prefix = prefix if prefix else '/'
+
+    if prefix[-1] != '/':
+        prefix += '/'
+
+    inc_name += ':'.join(app_path)
+
     # Build an Include for the set of nested URLs with the matching prefix
     # for the directory structure
+    # If a prefix param is present, pre-pend it as well
     app['routes'] = [Include(
-        '/' + '/'.join(app_path),
-        name=':'.join(app_path),
+        prefix + '/'.join(app_path),
+        name=inc_name,
         routes=routes,
     )]
 
@@ -131,6 +146,8 @@ def prioritize(priority_apps, reg_apps):
 def app_args(project_dir: str = None,
              priority_apps: list = None,
              print_results: bool = False,
+             routes_prefix: str = None,
+             routes_included_by: list = None,
              **kwargs) -> dict:
 
     sub_routes = []
@@ -147,7 +164,7 @@ def app_args(project_dir: str = None,
 
     # Collect and process all the sub app data
     for sapp in sub_apps:
-        sapp = process_app_routes(sapp)
+        sapp = process_app_routes(sapp, prefix=routes_prefix, included_by=routes_included_by)
         sub_routes += sapp.get('routes', [])
         sub_comps += sapp.get('components', [])
         sub_hooks += sapp.get('event_hooks', [])
