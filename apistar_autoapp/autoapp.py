@@ -1,7 +1,7 @@
 import inspect
-import typing
 import logging
 import os
+import typing
 from importlib import import_module
 
 from apistar import App, ASyncApp, Include
@@ -130,21 +130,24 @@ def prioritize(priority_apps, reg_apps):
         return reg_apps
 
     # Sort the reg_apps so the priority_apps are honored and first
-    papps = []
+    priority_apps = []
+    # Don't mutate the original list of apps, we'll return
+    # the prioritized list as a new list
     apps = reg_apps.copy()
 
     for papp in priority_apps:
         papp_path = tuple(papp.split('.'))
 
-        for sapp in apps:
-            if papp_path == sapp.get('app_path', tuple()):
-                papps.append(sapp)
-                apps.remove(sapp)
+        for app in apps:
+            if papp_path == app.get('app_path', tuple()):
+                priority_apps.append(app)
+                apps.remove(app)
 
-    return papps + apps
+    return priority_apps + apps
 
 
 def app_args(project_dir: str = None,
+             apps: list = None,
              priority_apps: list = None,
              print_results: bool = False,
              routes_prefix: typing.Union[str, tuple] = None,
@@ -154,20 +157,25 @@ def app_args(project_dir: str = None,
     sub_comps = []
     sub_hooks = []
 
+    # The apps list takes priority over the auto found apps,
+    # but priority can be adjusted with priority_apps
+    explicit_apps = [inspect_app((app,)) for app in apps or []]
+
     project_dir = project_dir or find_caller_dir()
 
     # Find all the sub apps and collect their info then prioritize them
-    sub_apps = prioritize(
+    # along with the explicit apps
+    apps = prioritize(
         priority_apps,
-        find_apps(os.path.realpath(project_dir))
+        explicit_apps + find_apps(os.path.realpath(project_dir))
     )
 
-    # Collect and process all the sub app data
-    for sapp in sub_apps:
-        sapp = process_app_routes(sapp, prefix=routes_prefix)
-        sub_routes += sapp.get('routes', [])
-        sub_comps += sapp.get('components', [])
-        sub_hooks += sapp.get('event_hooks', [])
+    # Collect and process all the imported app data
+    for app in apps:
+        app = process_app_routes(app, prefix=routes_prefix)
+        sub_routes += app.get('routes', [])
+        sub_comps += app.get('components', [])
+        sub_hooks += app.get('event_hooks', [])
 
     # Append the sub app data into the existing app data giving precedence to the
     # existing data
