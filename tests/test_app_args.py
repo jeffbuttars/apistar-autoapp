@@ -17,7 +17,6 @@ def test_app_args_print():
 
 
 def test_app_args_routes_prefix():
-    print('test_app_args_routes_prefix')
     prefix = '/vN/prefix'
     res = app_args(routes_prefix=prefix)
 
@@ -25,4 +24,4 @@ def test_app_args_routes_prefix():
     assert res.get('components') == []
     assert res.get('event_hooks') == []
     assert res.get('routes') == []
-    assert res.get('routes_prefix') == prefix
+    assert not res.get('routes_prefix')
