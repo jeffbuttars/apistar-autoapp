@@ -12,6 +12,7 @@
     <a href="https://badge.fury.io/py/apistar-autoapp">
     <img src="https://badge.fury.io/py/apistar-autoapp.svg" alt="PyPI version" height="18">
     </a>
+
 </p>
 
 
