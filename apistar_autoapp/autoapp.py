@@ -125,8 +125,8 @@ def find_apps(cur_dir: str, parent_app: tuple = None):
     return res
 
 
-def prioritize(priority_apps, reg_apps):
-    if not priority_apps:
+def prioritize(priority_app_paths, reg_apps):
+    if not priority_app_paths:
         return reg_apps
 
     # Sort the reg_apps so the priority_apps are honored and first
@@ -135,7 +135,7 @@ def prioritize(priority_apps, reg_apps):
     # the prioritized list as a new list
     apps = reg_apps.copy()
 
-    for papp in priority_apps:
+    for papp in priority_app_paths:
         papp_path = tuple(papp.split('.'))
 
         for app in apps:
