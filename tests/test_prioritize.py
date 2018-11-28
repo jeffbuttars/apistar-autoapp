@@ -33,6 +33,7 @@ def test_prioritize_some():
         [app_path(app4), app_path(app2)],
         apps
     )
+
     assert res
     assert res == [app4, app2, app1, app3]
 

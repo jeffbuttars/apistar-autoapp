@@ -12,6 +12,7 @@
     <a href="https://badge.fury.io/py/apistar-autoapp">
     <img src="https://badge.fury.io/py/apistar-autoapp.svg" alt="PyPI version" height="18">
     </a>
+
 </p>
 
 
@@ -49,6 +50,8 @@ Automatically orchestrates [API Star](https://docs.apistar.com/) projects with s
         filesystem path from the projects root `app.py` file.
 * Automatically collect [event_hooks](https://docs.apistar.com/api-guide/event-hooks/) and [component](https://docs.apistar.com/api-guide/dependency-injection/) lists from apps and consolidate them
   together to build the [App](https://docs.apistar.com/api-guide/applications/)/[ASyncApp](https://docs.apistar.com/api-guide/applications/) with.
+* Easily add external packages that support the `app.py` layout.  
+    ex: `AutoApp(apps=['apistar_websocket'])`
 * Allow an ordered priority list of apps by their path string to control the order of items
   in the [event_hooks](https://docs.apistar.com/api-guide/event-hooks/) and [component](https://docs.apistar.com/api-guide/dependency-injection/) lists as well as control import order.
 
@@ -70,7 +73,34 @@ routes = [
     Route('/', 'GET', handler=welcome, name='welcome'),
 ]
 
-app = AutoApp(routes=routes)
+app = AutoApp(
+    routes=routes,
+)
+
+
+if __name__ == '__main__':
+    app.serve('127.0.0.1', 8000, debug=True)
+```
+
+An ASync application that uses the `apistar-websocket` package. To use the external library simply
+list it in the `apps` parameter.  
+NOTE: packages listed in `apps` must support the `app.py`
+layout.
+```python
+from apistar-autoapp import AutoASyncApp
+
+async def welcome() -> dict:
+    return {'msg': 'hello'}
+
+
+routes = [
+    Route('/', 'GET', handler=welcome, name='welcome'),
+]
+
+app = AutoASyncApp(
+    apps=['apistar_websocket'],
+    routes=routes,
+)
 
 
 if __name__ == '__main__':
@@ -180,6 +210,10 @@ And if `endpointOne` had another route for the URL `/users`, you'd then have:
             **kwargs) -> App
 
 Parameters:
+
+    (Optional)
+    apps: A list of packages to add to your App. Use this for packages outside or your App/project.
+    Packages listed in the apps list must be on your PYTHON_PATH.
 
     (Optional)
     project_dir: The directory from which apistar-autoapp will look for a project root.
