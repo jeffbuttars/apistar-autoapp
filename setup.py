@@ -55,7 +55,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=['apistar_autoapp'],
     install_requires=[
-        'apistar',
+        'apistar<=0.5.42',
         'whitenoise',
         'aiofiles',
     ],

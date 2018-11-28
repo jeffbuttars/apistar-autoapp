@@ -4,11 +4,11 @@ import logging
 import os
 from importlib import import_module
 
-from apistar import App, ASyncApp, Include
+from apistar import App, ASyncApp, Include, Route
 
 from .printer import Printer
 
-logger = logging.getLogger('autoapp')
+logger = logging.getLogger("autoapp")
 
 
 def find_caller_dir():
@@ -24,7 +24,7 @@ def find_caller_dir():
     this_file = os.path.basename(__file__)
 
     for frame in inspect.stack():
-        if os.path.basename(frame.filename) == 'app.py':
+        if os.path.basename(frame.filename) == "app.py":
             return os.path.dirname(frame.filename)
 
         if not closest_frame and os.path.basename(frame.filename) != this_file:
@@ -34,7 +34,7 @@ def find_caller_dir():
     if closest_frame:
         return os.path.dirname(closest_frame.filename)
 
-    raise ImportError('Unable to find calling module')
+    raise ImportError("Unable to find calling module")
 
 
 def list_apps(app_dir: str) -> list:
@@ -44,7 +44,7 @@ def list_apps(app_dir: str) -> list:
     apps = []
 
     for de in os.scandir(app_dir):
-        if de.is_dir() and os.path.isfile(os.path.join(app_dir, de.name, 'app.py')):
+        if de.is_dir() and os.path.isfile(os.path.join(app_dir, de.name, "app.py")):
             apps.append(de.name)
 
     return apps
@@ -54,17 +54,17 @@ def inspect_app(app_path: tuple) -> dict:
     """
     Return the attributes need for the App() instance from this app's app.py
     """
-    path_str = '.'.join(app_path + ('app',))
+    path_str = ".".join(app_path + ("app",))
     app_mod = import_module(path_str)
 
     return {
-        'routes': getattr(app_mod, 'routes', []),
-        'components': getattr(app_mod, 'components', []),
-        'template_dir': getattr(app_mod, 'template_dir', []),
-        'static_dir': getattr(app_mod, 'static_dir', ''),
-        'packages': getattr(app_mod, 'packages', []),
-        'event_hooks': getattr(app_mod, 'event_hooks', []),
-        'app_path': app_path,
+        "routes": getattr(app_mod, "routes", []),
+        "components": getattr(app_mod, "components", []),
+        "template_dir": getattr(app_mod, "template_dir", []),
+        "static_dir": getattr(app_mod, "static_dir", ""),
+        "packages": getattr(app_mod, "packages", []),
+        "event_hooks": getattr(app_mod, "event_hooks", []),
+        "app_path": app_path,
     }
 
 
@@ -75,10 +75,10 @@ def process_app_routes(app, prefix: typing.Union[str, tuple] = None):
     URL prefix.
     """
 
-    routes = app.get('routes')
-    app_path = app.get('app_path')
-    inc_name = ''
-    url_prefix = '/'
+    routes = app.get("routes")
+    app_path = app.get("app_path")
+    inc_name = ""
+    url_prefix = "/"
 
     # If the app has no routes or is not nested (no or empty app_path), do nothing.
     if not routes or not app_path:
@@ -87,23 +87,31 @@ def process_app_routes(app, prefix: typing.Union[str, tuple] = None):
     if isinstance(prefix, tuple):
         url_prefix = prefix[0]
         if len(prefix) == 2:
-            inc_name = prefix[1] + ':'
+            inc_name = prefix[1] + ":"
     elif prefix:
         url_prefix = prefix
 
-    if url_prefix[-1] != '/':
-        url_prefix += '/'
+    if url_prefix[-1] != "/":
+        url_prefix += "/"
 
-    inc_name += ':'.join(app_path)
+    inc_name += ":".join(app_path)
+
+    namespaced_routes = [
+        Route(
+            r.url,
+            r.method,
+            r.handler,
+            name=inc_name + ":" + r.name,
+            documented=r.documented,
+            standalone=r.standalone,
+        )
+        for r in routes
+    ]
 
     # Build an Include for the set of nested URLs with the matching prefix
     # for the directory structure
     # If a prefix param is present, pre-pend it as well
-    app['routes'] = [Include(
-        url_prefix + '/'.join(app_path),
-        name=inc_name,
-        routes=routes,
-    )]
+    app["routes"] = [Include(url_prefix + "/".join(app_path), name=inc_name, routes=namespaced_routes)]
 
     return app
 
@@ -134,21 +142,23 @@ def prioritize(priority_apps, reg_apps):
     apps = reg_apps.copy()
 
     for papp in priority_apps:
-        papp_path = tuple(papp.split('.'))
+        papp_path = tuple(papp.split("."))
 
         for sapp in apps:
-            if papp_path == sapp.get('app_path', tuple()):
+            if papp_path == sapp.get("app_path", tuple()):
                 papps.append(sapp)
                 apps.remove(sapp)
 
     return papps + apps
 
 
-def app_args(project_dir: str = None,
-             priority_apps: list = None,
-             print_results: bool = False,
-             routes_prefix: typing.Union[str, tuple] = None,
-             **kwargs) -> dict:
+def app_args(
+    project_dir: str = None,
+    priority_apps: list = None,
+    print_results: bool = False,
+    routes_prefix: typing.Union[str, tuple] = None,
+    **kwargs
+) -> dict:
 
     sub_routes = []
     sub_comps = []
@@ -157,29 +167,26 @@ def app_args(project_dir: str = None,
     project_dir = project_dir or find_caller_dir()
 
     # Find all the sub apps and collect their info then prioritize them
-    sub_apps = prioritize(
-        priority_apps,
-        find_apps(os.path.realpath(project_dir))
-    )
+    sub_apps = prioritize(priority_apps, find_apps(os.path.realpath(project_dir)))
 
     # Collect and process all the sub app data
     for sapp in sub_apps:
         sapp = process_app_routes(sapp, prefix=routes_prefix)
-        sub_routes += sapp.get('routes', [])
-        sub_comps += sapp.get('components', [])
-        sub_hooks += sapp.get('event_hooks', [])
+        sub_routes += sapp.get("routes", [])
+        sub_comps += sapp.get("components", [])
+        sub_hooks += sapp.get("event_hooks", [])
 
     # Append the sub app data into the existing app data giving precedence to the
     # existing data
-    kwargs['components'] = kwargs.get('components', []) + sub_comps
-    kwargs['event_hooks'] = kwargs.get('event_hooks', []) + sub_hooks
-    kwargs['routes'] = kwargs.get('routes', []) + sub_routes
+    kwargs["components"] = kwargs.get("components", []) + sub_comps
+    kwargs["event_hooks"] = kwargs.get("event_hooks", []) + sub_hooks
+    kwargs["routes"] = kwargs.get("routes", []) + sub_routes
 
     if print_results:
         pr = Printer()
-        pr.components(kwargs['components'])
-        pr.routes(kwargs['routes'])
-        print('')
+        pr.components(kwargs["components"])
+        pr.routes(kwargs["routes"])
+        print("")
 
     return kwargs
 
